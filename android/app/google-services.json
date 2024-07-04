@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "630833710488",
+    "project_id": "solar-warden",
+    "storage_bucket": "solar-warden.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630833710488:android:9da7003a03d125e6a197ed",
+        "android_client_info": {
+          "package_name": "com.example.solar_warden"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzpUZBefWd3WCCp8aSZVITYf6GqtvooYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:630833710488:android:fbd5cdc8b7633f09a197ed",
+        "android_client_info": {
+          "package_name": "com.example.solarwarden"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzpUZBefWd3WCCp8aSZVITYf6GqtvooYo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,40 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "solar-warden",
+          "appId": "1:630833710488:android:fbd5cdc8b7633f09a197ed",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "solar-warden",
+          "configurations": {
+            "android": "1:630833710488:android:fbd5cdc8b7633f09a197ed",
+            "ios": "1:630833710488:ios:17141325e116f654a197ed",
+            "macos": "1:630833710488:ios:17141325e116f654a197ed",
+            "web": "1:630833710488:web:c08e5113855720b8a197ed",
+            "windows": "1:630833710488:web:7a8d5b3290f4e715a197ed"
+          }
+        }
+      }
+    }
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+      ]
+    }
+  ]
+}

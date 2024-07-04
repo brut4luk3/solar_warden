@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:solar_warden/services/api/nasa/solar_flares.dart';
-import 'package:solar_warden/services/notifications/notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'translation/locale_provider.dart';
 import 'translation/localization.dart';
 import 'screens/login/widgets/loginScreen.dart';
 import 'package:solar_warden/translation/TranslationWidget.dart';
-import 'dart:async';
+
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print("Handling a background message: ${message.messageId}");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-  final notificationService = NotificationService();
-  await notificationService.init();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   runApp(
     ChangeNotifierProvider(
@@ -21,11 +25,6 @@ void main() async {
       child: const MyApp(),
     ),
   );
-
-  Timer.periodic(Duration(minutes: 20), (timer) {
-    print('Enviando notificação...');
-    fetchSolarFlareApiDataForNotifications();
-  });
 }
 
 class MyApp extends StatelessWidget {

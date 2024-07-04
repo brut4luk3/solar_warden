@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../../components/backgroundSun.dart';
 import '../../../components/startSpinning.dart';
 import '../../home/widgets/homeScreen.dart';
@@ -21,7 +22,7 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   void initState() {
     super.initState();
     _controller1 = AnimationController(
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 2),
       vsync: this,
     );
     _controller2 = AnimationController(
@@ -44,6 +45,9 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
         _controller3.forward();
       }
     });
+
+    // Assine o tópico "all"
+    FirebaseMessaging.instance.subscribeToTopic('all');
   }
 
   @override
@@ -123,35 +127,38 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
                 const SizedBox(height: 80),
                 FadeTransition(
                   opacity: _controller3,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: _showSpinning
-                        ? StartSpinning(onComplete: _navigateToHome)
-                        : ElevatedButton(
-                      onPressed: () {
-                        _startAnimation();
-                        Future.delayed(const Duration(seconds: 2), () {
-                          _navigateToHome();
-                        });
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey[900],
-                        shape: const CircleBorder(),
-                        shadowColor: Colors.yellow,
-                        elevation: 20,
-                        padding: const EdgeInsets.all(50),
-                      ),
-                      child: Text(
-                        AppLocalizations.of(context).start!,
-                        style: const TextStyle(
-                          color: Colors.yellow,
-                          fontSize: 28,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      if (_showSpinning)
+                        StartSpinning(onComplete: _navigateToHome)
+                      else
+                        ElevatedButton(
+                          onPressed: () {
+                            _startAnimation();
+                            Future.delayed(const Duration(seconds: 2), () {
+                              _navigateToHome();
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey[900],
+                            shape: const CircleBorder(),
+                            shadowColor: Colors.yellow,
+                            elevation: 20,
+                            padding: const EdgeInsets.all(50),
+                          ),
+                          child: Text(
+                            AppLocalizations.of(context).start!,
+                            style: const TextStyle(
+                              color: Colors.yellow,
+                              fontSize: 28,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 200),
+                const SizedBox(height: 270),
                 FadeTransition(
                   opacity: _controller3,
                   child: Text(
