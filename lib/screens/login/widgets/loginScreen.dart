@@ -79,104 +79,100 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
   Widget build(BuildContext context) {
     return Scaffold(
       body: BackgroundSun(
-        child: Stack(
-          children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FadeTransition(
-                    opacity: _controller1,
-                    child: const Text(
-                      'Solar Warden',
-                      style: TextStyle(
-                        fontSize: 45,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.yellow,
-                            offset: Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  FadeTransition(
-                    opacity: _controller2,
-                    child: Text(
-                      AppLocalizations.of(context).eyeInTheSky!,
-                      style: const TextStyle(
-                        fontSize: 28,
-                        color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 10.0,
-                            color: Colors.yellow,
-                            offset: Offset(0, 0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 80),
-                  FadeTransition(
-                    opacity: _controller3,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: _showSpinning
-                          ? StartSpinning(onComplete: _navigateToHome)
-                          : ElevatedButton(
-                        onPressed: () {
-                          _startAnimation();
-                          Future.delayed(const Duration(seconds: 2), () {
-                            _navigateToHome();
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[900],
-                          shape: const CircleBorder(),
-                          shadowColor: Colors.yellow,
-                          elevation: 20,
-                          padding: const EdgeInsets.all(50),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: [
+                const SizedBox(height: 150),
+                FadeTransition(
+                  opacity: _controller1,
+                  child: const Text(
+                    'Solar Warden',
+                    style: TextStyle(
+                      fontSize: 45,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.yellow,
+                          offset: Offset(0, 0),
                         ),
-                        child: Text(
-                          AppLocalizations.of(context).start!,
-                          style: const TextStyle(
-                            color: Colors.yellow,
-                            fontSize: 28,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Center(
-                child: Text(
-                  AppLocalizations.of(context).by!,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 10.0,
-                        color: Colors.yellow,
-                        offset: Offset(0, 0),
-                      ),
-                    ],
                   ),
                 ),
-              ),
+                const SizedBox(height: 10),
+                FadeTransition(
+                  opacity: _controller2,
+                  child: Text(
+                    AppLocalizations.of(context).eyeInTheSky!,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.yellow,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 80),
+                FadeTransition(
+                  opacity: _controller3,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: _showSpinning
+                        ? StartSpinning(onComplete: _navigateToHome)
+                        : ElevatedButton(
+                      onPressed: () {
+                        _startAnimation();
+                        Future.delayed(const Duration(seconds: 2), () {
+                          _navigateToHome();
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[900],
+                        shape: const CircleBorder(),
+                        shadowColor: Colors.yellow,
+                        elevation: 20,
+                        padding: const EdgeInsets.all(50),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context).start!,
+                        style: const TextStyle(
+                          color: Colors.yellow,
+                          fontSize: 28,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 200),
+                FadeTransition(
+                  opacity: _controller3,
+                  child: Text(
+                    AppLocalizations.of(context).by!,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.yellow,
+                          offset: Offset(0, 0),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

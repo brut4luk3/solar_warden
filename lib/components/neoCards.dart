@@ -77,7 +77,7 @@ class NeoCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '${localization.name ?? 'Name'}: ${item['name']}',
+                        '${item['name']}',
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -197,7 +197,7 @@ class NeoCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 16),
-            if (missDistance < 18000000)
+            if (missDistance < 40000)
               const Icon(
                 FontAwesomeIcons.skull,
                 color: Colors.white,
@@ -205,7 +205,7 @@ class NeoCard extends StatelessWidget {
                 shadows: [
                   Shadow(
                     blurRadius: 40.0,
-                    color: Colors.yellowAccent,
+                    color: Colors.redAccent,
                     offset: Offset(0, 0),
                   ),
                 ],

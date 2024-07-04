@@ -130,7 +130,6 @@ class AppLocalizations {
       'potentiallyHazardousNEOs': 'Potentially Hazardous NEOs',
       'selectPeriod': 'Select a period to view the data',
       'noEvents': 'No events in the selected period...',
-      'name': 'Name',
       'estimatedDiameter': 'Estimated Diameter:',
       'min': 'Min',
       'max': 'Max',
@@ -265,7 +264,6 @@ class AppLocalizations {
       'potentiallyHazardousNEOs': 'NEOs Potencialmente Perigosos',
       'selectPeriod': 'Selecione um período para visualizar os dados',
       'noEvents': 'Nenhum evento no período escolhido...',
-      'name': 'Nome',
       'estimatedDiameter': 'Diâmetro Estimado:',
       'min': 'Mín',
       'max': 'Máx',
@@ -756,10 +754,6 @@ class AppLocalizations {
 
   String? get noEvents {
     return _localizedValues[locale.languageCode]!['noEvents'];
-  }
-
-  String? get name {
-    return _localizedValues[locale.languageCode]!['name'];
   }
 
   String? get estimatedDiameter {
