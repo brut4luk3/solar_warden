@@ -48,6 +48,32 @@ class _LoginScreenState extends State<LoginScreen> with TickerProviderStateMixin
 
     // Assine o tópico "all"
     FirebaseMessaging.instance.subscribeToTopic('all');
+
+    // Solicite permissão para notificações
+    requestNotificationPermission();
+  }
+
+  Future<void> requestNotificationPermission() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    // For iOS
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('User granted permission');
+    } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      print('User granted provisional permission');
+    } else {
+      print('User declined or has not accepted permission');
+    }
   }
 
   @override
