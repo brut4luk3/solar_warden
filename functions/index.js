@@ -8,7 +8,7 @@ admin.initializeApp();
 const NASA_API_URL = process.env.NASA_API_URL || functions.config().nasa.api_url;
 const NASA_API_KEY = process.env.NASA_API_KEY || functions.config().nasa.api_key;
 
-exports.sendNotification = functions.pubsub.schedule("every 1 minutes").onRun(async (context) => {
+exports.sendNotification = functions.pubsub.schedule("every 1 hours").onRun(async (context) => {
   const currentDate = moment().format('YYYY-MM-DD');
   const currentTime = moment().format('HH:mm');
   const startDate = currentDate;
