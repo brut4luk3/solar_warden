@@ -1,9 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../../constants/constants.dart';
-import 'package:intl/intl.dart';
-import '../../notifications/notification_service.dart';
-import '../../utils/utils.dart';
 
 Future<Map<String, dynamic>> fetchSolarFlareApiDataWithDates(String startDate, String endDate) async {
   final url = Uri.parse('$nasaApiUrl?startDate=$startDate&endDate=$endDate&api_key=$nasaApiKey');
