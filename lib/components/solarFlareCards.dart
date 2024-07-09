@@ -8,10 +8,18 @@ class SolarFlareCard extends StatelessWidget {
 
   const SolarFlareCard({Key? key, required this.item}) : super(key: key);
 
-  String formatDate(String? dateStr) {
+  String formatDate(String? dateStr, String locale) {
     if (dateStr == null) return 'N/A';
-    DateTime date = DateTime.parse(dateStr).toLocal();
-    return DateFormat('yyyy/MM/dd - HH:mm').format(date);
+    DateTime date = DateTime.parse(dateStr).toUtc();
+
+    if (locale == 'pt') {
+      date = date.add(Duration(hours: 3));
+    }
+
+    date = date.toLocal();
+    return locale == 'pt'
+        ? DateFormat('dd/MM/yyyy - HH:mm', 'pt_BR').format(date)
+        : DateFormat('yyyy/MM/dd - HH:mm').format(date);
   }
 
   String getLocation(int? activeRegionNum) {
@@ -101,9 +109,7 @@ class SolarFlareCard extends StatelessWidget {
                 backgroundColor: Colors.white12,
                 foregroundColor: Colors.white,
               ),
-              child: Text(
-                  AppLocalizations.of(context).closePopup ?? "Close"
-              ),
+              child: Text(AppLocalizations.of(context).closePopup ?? "Close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -117,6 +123,7 @@ class SolarFlareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context);
+    final locale = localization.localeName;
 
     return Card(
       color: Colors.grey[900],
@@ -153,7 +160,8 @@ class SolarFlareCard extends StatelessWidget {
                         onPressed: () {
                           _showPopup(
                             context,
-                            localization.whatIsClassTypes ?? 'O que são Tipos de Classes?',
+                            localization.whatIsClassTypes ??
+                                'O que são Tipos de Classes?',
                             WhatIsClassTypes(),
                           );
                         },
@@ -166,7 +174,7 @@ class SolarFlareCard extends StatelessWidget {
                     style: const TextStyle(color: Colors.yellow),
                   ),
                   Text(
-                    formatDate(item['beginTime']),
+                    formatDate(item['beginTime'], locale),
                     style: const TextStyle(
                       color: Colors.white,
                       shadows: [
@@ -184,7 +192,7 @@ class SolarFlareCard extends StatelessWidget {
                     style: const TextStyle(color: Colors.yellow),
                   ),
                   Text(
-                    formatDate(item['peakTime']),
+                    formatDate(item['peakTime'], locale),
                     style: const TextStyle(
                       color: Colors.white,
                       shadows: [
@@ -202,7 +210,7 @@ class SolarFlareCard extends StatelessWidget {
                     style: const TextStyle(color: Colors.yellow),
                   ),
                   Text(
-                    formatDate(item['endTime']),
+                    formatDate(item['endTime'], locale),
                     style: const TextStyle(
                       color: Colors.white,
                       shadows: [

@@ -125,6 +125,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(height: 20),
                 _buildActionButton(localization.nears ?? 'NEOs', context, isNeo: true),
                 const SizedBox(height: 50),
+                Container(
+                  height: 100,
+                  width: double.infinity,
+                  color: Colors.black54,
+                  child: Center(
+                    child: Text(
+                      "Anúncio aqui",
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 50),
               ],
             ),
           ),
@@ -234,8 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
               };
               if (isSolarFlare) {
                 Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SolarFlareScreen())
+                    context,
+                    MaterialPageRoute(builder: (context) => SolarFlareScreen())
                 );
               }
             },

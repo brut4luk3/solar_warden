@@ -8,14 +8,12 @@ admin.initializeApp();
 const NASA_API_URL = process.env.NASA_API_URL || functions.config().nasa.api_url;
 const NASA_API_KEY = process.env.NASA_API_KEY || functions.config().nasa.api_key;
 
-exports.sendNotification = functions.pubsub.schedule("every 1 hours").onRun(async (context) => {
+exports.sendNotification = functions.pubsub.schedule("every 2 hours").onRun(async (context) => {
   const currentDate = moment().format('YYYY-MM-DD');
-  const currentTime = moment().format('HH:mm');
-  const startDate = currentDate;
-  const endDate = currentDate;
+  const previousDate = moment().subtract(1, 'days').format('YYYY-MM-DD');
 
   try {
-    const response = await axios.get(`${NASA_API_URL}?startDate=${startDate}&endDate=${endDate}&api_key=${NASA_API_KEY}`, {
+    const response = await axios.get(`${NASA_API_URL}?startDate=${previousDate}&endDate=${currentDate}&api_key=${NASA_API_KEY}`, {
       headers: {
         accept: 'application/json'
       }
@@ -25,30 +23,17 @@ exports.sendNotification = functions.pubsub.schedule("every 1 hours").onRun(asyn
     let notificationTitle = "";
     let notificationBody = "";
 
-    const currentTimeMoment = moment(currentTime, 'HH:mm');
+    const recentFlare = flares.reduce((latest, flare) => {
+      const flareTime = moment(flare.endTime, 'YYYY-MM-DDTHH:mm:ssZ').utc();
+      return flareTime.isAfter(latest.endTime) ? flare : latest;
+    }, { endTime: moment(0) });
 
-    const flareNow = flares.find(flare => {
-      const beginTime = moment(flare.beginTime, 'YYYY-MM-DDTHH:mm:ssZ').utc();
-      const endTime = moment(flare.endTime, 'YYYY-MM-DDTHH:mm:ssZ').utc();
-      return currentTimeMoment.isBetween(beginTime, endTime);
-    });
-
-    if (flareNow) {
+    if (recentFlare.endTime !== moment(0).format('YYYY-MM-DDTHH:mm:ssZ')) {
       notificationTitle = "🚨ATENÇÃO🚨";
-      notificationBody = `Flare Solar tipo ${flareNow.classType} ocorrendo agora!`;
+      notificationBody = `Houve um Flare Solar tipo ${recentFlare.classType} em ${moment(recentFlare.endTime).format('DD/MM/YYYY HH:mm')}!`;
     } else {
-      const recentFlare = flares.find(flare => {
-        const endTime = moment(flare.endTime, 'YYYY-MM-DDTHH:mm:ssZ').utc();
-        return endTime.isSame(currentTimeMoment.subtract(1, 'hours'), 'day');
-      });
-
-      if (recentFlare) {
-        notificationTitle = "❗ATENÇÃO❗";
-        notificationBody = `Houve um Flare Solar tipo ${recentFlare.classType} agora pouco!`;
-      } else {
-        notificationTitle = "🌥️ Nenhum Flare Solar";
-        notificationBody = "Nenhum Flare Solar ocorrendo atualmente, tudo certo!";
-      }
+      notificationTitle = "🌥️ Nenhum Flare Solar";
+      notificationBody = "Nenhum Flare Solar ocorrendo atualmente, tudo certo!";
     }
 
     const payload = {

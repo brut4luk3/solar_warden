@@ -9,7 +9,6 @@ jest.mock("firebase-admin", () => ({
   })
 }));
 
-// Mock the axios module
 jest.mock("axios");
 
 const sendNotification = require("../index").sendNotification;
@@ -24,40 +23,17 @@ describe("sendNotification", () => {
     admin.messaging().sendToTopic.mockClear();
   });
 
-  it("should send a notification for a flare occurring now", async () => {
+  it("should send a notification for the most recent flare today or yesterday", async () => {
     const currentTime = moment().utc();
     const flares = [
       {
-        flrID: "flare-now",
+        flrID: "flare-1",
         classType: "M1.2",
-        beginTime: currentTime.subtract(1, 'minutes').format('YYYY-MM-DDTHH:mm:ssZ'),
-        endTime: currentTime.add(2, 'minutes').format('YYYY-MM-DDTHH:mm:ssZ')
-      }
-    ];
-
-    const axios = require("axios");
-    axios.get.mockResolvedValue({ data: flares });
-
-    const sendToTopic = admin.messaging().sendToTopic;
-
-    const wrapped = functions.wrap(sendNotification);
-    await wrapped({});
-
-    expect(sendToTopic).toHaveBeenCalledWith("all", {
-      notification: {
-        title: "🚨ATENÇÃO🚨",
-        body: "Flare Solar tipo M1.2 ocorrendo agora!"
-      }
-    });
-  });
-
-  it("should send a notification for a flare that ended recently", async () => {
-    const currentTime = moment().utc();
-    const flares = [
+        endTime: currentTime.subtract(1, 'days').format('YYYY-MM-DDTHH:mm:ssZ')
+      },
       {
-        flrID: "recent-flare",
-        classType: "M1.2",
-        beginTime: currentTime.subtract(2, 'hours').format('YYYY-MM-DDTHH:mm:ssZ'),
+        flrID: "flare-2",
+        classType: "X2.1",
         endTime: currentTime.subtract(30, 'minutes').format('YYYY-MM-DDTHH:mm:ssZ')
       }
     ];
@@ -72,13 +48,13 @@ describe("sendNotification", () => {
 
     expect(sendToTopic).toHaveBeenCalledWith("all", {
       notification: {
-        title: "❗ATENÇÃO❗",
-        body: "Houve um Flare Solar tipo M1.2 agora pouco!"
+        title: "🚨ATENÇÃO🚨",
+        body: `Houve um Flare Solar tipo X2.1 em ${currentTime.subtract(30, 'minutes').format('DD/MM/YYYY HH:mm')}!`
       }
     });
   });
 
-  it("should send a notification when no flares are occurring", async () => {
+  it("should not send a notification when no flares are found", async () => {
     const axios = require("axios");
     axios.get.mockResolvedValue({ data: [] });
 
@@ -87,11 +63,6 @@ describe("sendNotification", () => {
     const wrapped = functions.wrap(sendNotification);
     await wrapped({});
 
-    expect(sendToTopic).toHaveBeenCalledWith("all", {
-      notification: {
-        title: "🌥️ Nenhum Flare Solar",
-        body: "Nenhum Flare Solar ocorrendo atualmente, tudo certo!"
-      }
-    });
+    expect(sendToTopic).not.toHaveBeenCalled();
   });
 });

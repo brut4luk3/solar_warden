@@ -280,6 +280,8 @@ class AppLocalizations {
     },
   };
 
+  String get localeName => locale.languageCode;
+
   String? get eyeInTheSky {
     return _localizedValues[locale.languageCode]!['eye_in_the_sky'];
   }
