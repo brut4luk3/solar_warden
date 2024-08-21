@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:solar_warden/translation/localization.dart';
 import 'package:solar_warden/translation/TranslationWidget.dart';
 import 'package:solar_warden/screens/solarflare/functions/solarFlareFunctions.dart';
+import 'package:solar_warden/screens/solarflare/widgets/solarFlareDetailScreen.dart';
+import 'package:solar_warden/screens/solarflare/functions/solarFlareDetailFunctions.dart';
 import 'package:solar_warden/components/solarFlareCards.dart';
 import 'package:intl/intl.dart';
 import 'package:solar_warden/components/homeBackground.dart';

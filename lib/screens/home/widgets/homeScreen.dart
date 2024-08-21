@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../../../components/skyBackground.dart';
 import '../../../translation/localization.dart';
 import '../../neo/widgets/neoScreen.dart';
 import '../../solarflare/widgets/solarFlareScreen.dart';
+import '../../../constants/constants.dart';
+
 import 'package:solar_warden/translation/TranslationWidget.dart';
 import 'package:solar_warden/components/helpers/solarFlares/whatIsSolarFlare.dart';
 import 'package:solar_warden/components/helpers/solarFlares/aboutTime.dart';
@@ -129,14 +132,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 100,
                   width: double.infinity,
                   color: Colors.black54,
-                  child: Center(
-                    child: Text(
-                      "Anúncio aqui",
-                      style: TextStyle(
-                        color: Colors.yellow,
-                        fontSize: 18,
-                      ),
-                    ),
+                  child: AdWidget(
+                    ad: BannerAd(
+                      adUnitId: bannerId,
+                      size: AdSize.banner,
+                      request: const AdRequest(),
+                      listener: BannerAdListener(),
+                    )..load(),
                   ),
                 ),
                 const SizedBox(height: 50),

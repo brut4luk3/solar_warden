@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart'; // Adicionado para AdMob
 import 'translation/locale_provider.dart';
 import 'translation/localization.dart';
 import 'screens/login/widgets/loginScreen.dart';
@@ -19,6 +20,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  MobileAds.instance.initialize();
 
   String envPath = path.join(Directory.current.path, '.env');
   if (await File(envPath).exists()) {
