@@ -3,7 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart'; // Adicionado para AdMob
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'translation/locale_provider.dart';
 import 'translation/localization.dart';
 import 'screens/login/widgets/loginScreen.dart';

@@ -257,20 +257,6 @@ class SolarFlareCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (item['note'] != null && item['note'].isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Container(
-                        width: 200,
-                        child: Text(
-                          item['note'],
-                          style: const TextStyle(
-                            color: Colors.white60,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
-                    ),
                 ],
               ),
             ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:intl/intl.dart';
 import '../../../components/skyBackground.dart';
 import '../../../translation/localization.dart';
 import '../../neo/widgets/neoScreen.dart';
 import '../../solarflare/widgets/solarFlareScreen.dart';
+import '../../../components/solarFlareCards.dart';
+import '../functions/homeFunctions.dart';
 import '../../../constants/constants.dart';
 
 import 'package:solar_warden/translation/TranslationWidget.dart';
@@ -27,6 +30,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Map<String, dynamic>> solarFlareData = [];
+  bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchSolarFlareData();
+  }
+
+  Future<void> _fetchSolarFlareData() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday));
+    final data = await fetchSolarFlareData(
+      DateFormat('yyyy-MM-dd').format(startOfWeek),
+      DateFormat('yyyy-MM-dd').format(now),
+    );
+
+    setState(() {
+      solarFlareData = data;
+      isLoading = false;
+    });
+  }
 
   void _showPopup(BuildContext context, String title, Widget content) {
     showDialog(
@@ -45,9 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: Colors.white12,
                 foregroundColor: Colors.white,
               ),
-              child: Text(
-                  AppLocalizations.of(context).closePopup ?? "Close"
-              ),
+              child: Text(AppLocalizations.of(context).closePopup ?? "Close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -90,7 +117,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Text(
-                  localization.personalObservatory ?? 'Seu observatório pessoal!',
+                  localization.personalObservatory ??
+                      'Seu observatório pessoal!',
                   style: const TextStyle(
                     fontSize: 16,
                     color: Colors.white,
@@ -104,8 +132,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
+                if (isLoading)
+                  Center(
+                    child: CircularProgressIndicator(color: Colors.yellow),
+                  )
+                else if (solarFlareData.isNotEmpty)
+                  Container(
+                    constraints: BoxConstraints(maxHeight: 330),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: solarFlareData.take(5).length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: 300,
+                              maxWidth: 380,
+                            ),
+                            child: SolarFlareCard(item: solarFlareData[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                else
+                  Center(
+                    child: Text(
+                      localization.noEvents ??
+                          'Nenhum evento de flare solar disponível.',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                const SizedBox(height: 30),
                 Text(
-                  localization.menuLabel ?? 'Abaixo você encontrará informações que lhe ajudarão a entender os dados apresentados por esta ferramenta:',
+                  localization.menuLabel ??
+                      'Abaixo você encontrará informações que lhe ajudarão a entender os dados apresentados por esta ferramenta:',
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,
@@ -124,9 +187,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                _buildActionButton(localization.solarFlares ?? 'Flares Solares', context, isSolarFlare: true),
+                _buildActionButton(
+                    localization.solarFlares ?? 'Flares Solares', context,
+                    isSolarFlare: true),
                 const SizedBox(height: 20),
-                _buildActionButton(localization.nears ?? 'NEOs', context, isNeo: true),
+                _buildActionButton(localization.nears ?? 'NEOs', context,
+                    isNeo: true),
                 const SizedBox(height: 50),
                 Container(
                   height: 80,
@@ -150,7 +216,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildLegendSection(BuildContext context, AppLocalizations localization) {
+  Widget _buildLegendSection(
+      BuildContext context, AppLocalizations localization) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -162,10 +229,21 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-        _buildLegendButton(localization.whatAreSolarFlares ?? 'O que são Flares Solares?', context, WhatIsSolarFlare()),
-        _buildLegendButton(localization.understandDates ?? 'Entenda as datas', context, AboutTime()),
-        _buildLegendButton(localization.typesOfClasses ?? 'Quais são os tipos de classes destes eventos?', context, WhatIsClassTypes()),
-        _buildLegendButton(localization.activeRegions ?? 'O que são as regiões ativas?', context, WhatIsActiveRegion()),
+        _buildLegendButton(
+            localization.whatAreSolarFlares ?? 'O que são Flares Solares?',
+            context,
+            WhatIsSolarFlare()),
+        _buildLegendButton(localization.understandDates ?? 'Entenda as datas',
+            context, AboutTime()),
+        _buildLegendButton(
+            localization.typesOfClasses ??
+                'Quais são os tipos de classes destes eventos?',
+            context,
+            WhatIsClassTypes()),
+        _buildLegendButton(
+            localization.activeRegions ?? 'O que são as regiões ativas?',
+            context,
+            WhatIsActiveRegion()),
         const SizedBox(height: 10),
         Text(
           localization.nears ?? 'NEOs',
@@ -175,12 +253,31 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-        _buildLegendButton(localization.whatAreNEOs ?? 'O que são NEOs?', context, const WhatIsNeo()),
-        _buildLegendButton(localization.approachDates ?? 'Entenda as datas de aproximação', context, const AboutCloseApproachDate()),
-        _buildLegendButton(localization.diameter ?? 'Entenda mais sobre o diâmetro dos objetos', context, const AboutDiameter()),
-        _buildLegendButton(localization.relativeSpeed ?? 'Entenda mais sobre a velocidade relativa', context, const AboutVelocity()),
-        _buildLegendButton(localization.proximityDistances ?? 'Entenda as distâncias de proximidade', context, const WhatIsMissDistance()),
-        _buildLegendButton(localization.orbitingBody ?? 'O que é o Corpo em Órbita', context, const WhatIsOrbitingBody()),
+        _buildLegendButton(localization.whatAreNEOs ?? 'O que são NEOs?',
+            context, const WhatIsNeo()),
+        _buildLegendButton(
+            localization.approachDates ?? 'Entenda as datas de aproximação',
+            context,
+            const AboutCloseApproachDate()),
+        _buildLegendButton(
+            localization.diameter ??
+                'Entenda mais sobre o diâmetro dos objetos',
+            context,
+            const AboutDiameter()),
+        _buildLegendButton(
+            localization.relativeSpeed ??
+                'Entenda mais sobre a velocidade relativa',
+            context,
+            const AboutVelocity()),
+        _buildLegendButton(
+            localization.proximityDistances ??
+                'Entenda as distâncias de proximidade',
+            context,
+            const WhatIsMissDistance()),
+        _buildLegendButton(
+            localization.orbitingBody ?? 'O que é o Corpo em Órbita',
+            context,
+            const WhatIsOrbitingBody()),
       ],
     );
   }
@@ -212,7 +309,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildActionButton(String text, BuildContext context, {bool isSolarFlare = false, bool isNeo = false}) {
+  Widget _buildActionButton(String text, BuildContext context,
+      {bool isSolarFlare = false, bool isNeo = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Stack(
@@ -248,12 +346,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => NeoScreen()),
                 );
-              };
+              }
               if (isSolarFlare) {
                 Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SolarFlareScreen())
-                );
+                    MaterialPageRoute(
+                        builder: (context) => SolarFlareScreen()));
               }
             },
             child: Text(
