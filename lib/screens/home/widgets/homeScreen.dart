@@ -129,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 _buildActionButton(localization.nears ?? 'NEOs', context, isNeo: true),
                 const SizedBox(height: 50),
                 Container(
-                  height: 100,
+                  height: 80,
                   width: double.infinity,
                   color: Colors.black54,
                   child: AdWidget(
