@@ -142,7 +142,9 @@ class AppLocalizations {
       "peakTime": "Peak Time",
       "endTime": "End Time",
       "location": "Location",
-      "aboutCloseApproachDate": "Understand the approach dates"
+      "aboutCloseApproachDate": "Understand the approach dates",
+      "latestSolarFlares": "Latest Solar Flares",
+      "latestNeos": "Latest NEOs"
     },
     'pt': {
       'eye_in_the_sky': 'De Olho no Céu',
@@ -276,7 +278,9 @@ class AppLocalizations {
       "peakTime": "Hora de Pico",
       "endTime": "Hora de Fim",
       "location": "Localização",
-      "aboutCloseApproachDate": "Entenda as datas de aproximação"
+      "aboutCloseApproachDate": "Entenda as datas de aproximação",
+      "latestSolarFlares": "Últimos Flares Solares",
+      "latestNeos": "Últimos NEOs"
     },
   };
 
@@ -808,6 +812,14 @@ class AppLocalizations {
 
   String? get aboutCloseApproachDate {
     return _localizedValues[locale.languageCode]!['aboutCloseApproachDate'];
+  }
+
+  String? get latestSolarFlares {
+    return _localizedValues[locale.languageCode]!['latestSolarFlares'];
+  }
+
+  String? get latestNeos {
+    return _localizedValues[locale.languageCode]!['latestNeos'];
   }
 }
 

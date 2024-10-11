@@ -3,9 +3,11 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:intl/intl.dart';
 import '../../../components/skyBackground.dart';
 import '../../../translation/localization.dart';
-import '../../neo/widgets/neoScreen.dart';
 import '../../solarflare/widgets/solarFlareScreen.dart';
 import '../../../components/solarFlareCards.dart';
+import '../../neo/widgets/neoScreen.dart';
+import '../../neo/functions/neoFunctions.dart';
+import '../../../components/neoCards.dart';
 import '../functions/homeFunctions.dart';
 import '../../../constants/constants.dart';
 
@@ -31,12 +33,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Map<String, dynamic>> solarFlareData = [];
+  List<Map<String, dynamic>> neoData = [];
   bool isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _fetchSolarFlareData();
+    final now = DateTime.now();
+    final startOfWeek = now.subtract(Duration(days: now.weekday));
+    _fetchNeoData(startOfWeek, now);
   }
 
   Future<void> _fetchSolarFlareData() async {
@@ -53,6 +59,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       solarFlareData = data;
+      isLoading = false;
+    });
+  }
+
+  Future<void> _fetchNeoData(DateTime startDate, DateTime endDate) async {
+    setState(() {
+      isLoading = true;
+    });
+    final formattedStartDate = DateFormat('yyyy-MM-dd').format(startDate);
+    final formattedEndDate = DateFormat('yyyy-MM-dd').format(endDate);
+
+    final data = await fetchNEOData(formattedStartDate, formattedEndDate);
+    setState(() {
+      neoData = data;
       isLoading = false;
     });
   }
@@ -132,6 +152,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 const SizedBox(height: 30),
+                Text(
+                  localization.latestSolarFlares ?? 'Últimos Flares Solares',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.yellow,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
                 if (isLoading)
                   Center(
                     child: CircularProgressIndicator(color: Colors.yellow),
@@ -152,6 +188,56 @@ class _HomeScreenState extends State<HomeScreen> {
                               maxWidth: 380,
                             ),
                             child: SolarFlareCard(item: solarFlareData[index]),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                else
+                  Center(
+                    child: Text(
+                      localization.noEvents ??
+                          'Nenhum evento de flare solar disponível.',
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                  ),
+                const SizedBox(height: 30),
+                Text(
+                  localization.latestNeos ?? 'Últimos NEOs',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        blurRadius: 10.0,
+                        color: Colors.yellow,
+                        offset: Offset(0, 0),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 10),
+                if (isLoading)
+                  Center(
+                    child: CircularProgressIndicator(color: Colors.yellow),
+                  )
+                else if (neoData.isNotEmpty)
+                  Container(
+                    constraints: BoxConstraints(maxHeight: 350),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: neoData.take(5).length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minWidth: 300,
+                              maxWidth: 380,
+                            ),
+                            child: NeoCard(item: neoData[index]),
                           ),
                         );
                       },

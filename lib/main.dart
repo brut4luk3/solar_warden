@@ -9,8 +9,6 @@ import 'translation/localization.dart';
 import 'screens/login/widgets/loginScreen.dart';
 import 'package:solar_warden/translation/TranslationWidget.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'dart:io';
-import 'package:path/path.dart' as path;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -23,12 +21,7 @@ Future<void> main() async {
 
   MobileAds.instance.initialize();
 
-  String envPath = path.join(Directory.current.path, '.env');
-  if (await File(envPath).exists()) {
-    await dotenv.load(fileName: envPath);
-  } else {
-    print("Warning: .env file not found. Skipping dotenv loading.");
-  }
+  await dotenv.load(fileName: '.env');
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
